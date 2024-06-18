@@ -1,40 +1,32 @@
-@Library("jhc-libs") _
+@Library("shared") _
 
 pipeline {
     agent any
-
-    stages {
-        stage('Maven Build') {
-            steps {
-                sh 'mvn clean package'
+    
+    stages{
+        stage('git')
+        {
+            steps
+            {
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/javahometech/ga-app'
             }
         }
-        stage("Upload Artifacts"){
+        stage('build')
+        {
             steps{
-               script{
-                    def pom = readMavenPom file: 'pom.xml'
-                    def version = pom.version
-                    def repoName = version.endsWith("SNAPSHOT") ? "do-snapshot": "do-release"
-                    nexusArtifactUploader artifacts: [[artifactId: 'doctor-online', classifier: '', file: 'target/doctor-online.war', type: 'war']], 
-                        credentialsId: 'nexus3', 
-                        groupId: 'in.javahome', 
-                        nexusUrl: '172.31.47.53:8081', 
-                        nexusVersion: 'nexus3', 
-                        protocol: 'http', 
-                        repository: repoName, 
-                        version: version
-               }
+            sh 'mvn clean package'
             }
         }
-        stage("Tomcat Dev Deploy"){
+        stage('tomcat deploy')
+        {
             steps{
-                tomcatDeploy("172.31.30.174","ec2-user","tomcat-dev","doctor-online.war")
+                tomcatDeploy("172.31.41.246", "ec2-user", "ga-app.war", "tomcat-dev")
+                }
             }
         }
-    }
-    post {
-      success {
-        cleanWs()
-      }
-    }
+        post {
+  success {
+    cleanWs()
+  }
 }
+    }
