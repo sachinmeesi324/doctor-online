@@ -17,12 +17,40 @@ pipeline {
             sh 'mvn clean package'
             }
         }
-        stage('tomcat deploy')
+        stage('tomcat dev deploy')
         {
+            when{
+                branch 'dev'
+            }
+            steps{
+                tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
+                echo "Deploying dev"
+                }
+            }
+
+        stage('tomcat test deploy')
+        {
+             when
+             {
+                   branch 'test'
+             }
+            steps{
+                tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
+                echo "Deploying test"
+                }
+            }
+
+            stage('tomcat prod deploy')
+        {
+             when{
+                branch 'prod'
+                echo "Deploying prod"
+            }
             steps{
                 tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
                 }
             }
+
         }
         post {
   success {
