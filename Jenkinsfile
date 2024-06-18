@@ -44,10 +44,10 @@ pipeline {
         {
              when{
                 branch 'prod'
-                echo "Deploying prod"
             }
             steps{
                 tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
+                echo "deploying to prod"
                 }
             }
 
