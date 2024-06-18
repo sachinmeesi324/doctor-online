@@ -8,7 +8,7 @@ pipeline {
         {
             steps
             {
-                git branch: 'main', credentialsId: 'github', url: 'https://github.com/javahometech/ga-app'
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/javahometech/doctor-online'
             }
         }
         stage('build')
@@ -20,7 +20,7 @@ pipeline {
         stage('tomcat deploy')
         {
             steps{
-                tomcatDeploy("172.31.41.246", "ec2-user", "ga-app.war", "tomcat-dev")
+                tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
                 }
             }
         }
