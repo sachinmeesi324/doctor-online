@@ -20,7 +20,7 @@ pipeline {
         stage('tomcat dev deploy')
         {
             when{
-                branch 'dev'
+                branch 'develop'
             }
             steps{
                 tomcatDeploy("172.31.41.246", "ec2-user", "doctor-online.war", "tomcat-dev")
